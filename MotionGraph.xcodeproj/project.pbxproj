@@ -8,8 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		2B373F611A3F1E42008A7018 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B373F601A3F1E42008A7018 /* Images.xcassets */; };
-		2B533C1A1A3F071200D7B89D /* DotCALayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B533C181A3F071200D7B89D /* DotCALayer.swift */; };
-		2B533C1B1A3F071200D7B89D /* LineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B533C191A3F071200D7B89D /* LineChart.swift */; };
+		2B373FA61A4077D2008A7018 /* Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B373FA31A4077D2008A7018 /* Chart.swift */; };
+		2B373FA71A4077D2008A7018 /* ChartColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B373FA41A4077D2008A7018 /* ChartColors.swift */; };
+		2B373FA81A4077D2008A7018 /* ChartSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B373FA51A4077D2008A7018 /* ChartSeries.swift */; };
+		2B373FAC1A40A1AB008A7018 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B373FAB1A40A1AB008A7018 /* SettingsViewController.swift */; };
 		2BA5FD8E1A389D40004615F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA5FD8D1A389D40004615F2 /* AppDelegate.swift */; };
 		2BA5FD901A389D40004615F2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA5FD8F1A389D40004615F2 /* ViewController.swift */; };
 		2BA5FD931A389D40004615F2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2BA5FD911A389D40004615F2 /* Main.storyboard */; };
@@ -29,8 +31,10 @@
 
 /* Begin PBXFileReference section */
 		2B373F601A3F1E42008A7018 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		2B533C181A3F071200D7B89D /* DotCALayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DotCALayer.swift; sourceTree = "<group>"; };
-		2B533C191A3F071200D7B89D /* LineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChart.swift; sourceTree = "<group>"; };
+		2B373FA31A4077D2008A7018 /* Chart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chart.swift; sourceTree = "<group>"; };
+		2B373FA41A4077D2008A7018 /* ChartColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartColors.swift; sourceTree = "<group>"; };
+		2B373FA51A4077D2008A7018 /* ChartSeries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartSeries.swift; sourceTree = "<group>"; };
+		2B373FAB1A40A1AB008A7018 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		2BA5FD881A389D40004615F2 /* MotionGraph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionGraph.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BA5FD8C1A389D40004615F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2BA5FD8D1A389D40004615F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -60,6 +64,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2B373FA21A4077D2008A7018 /* Chart */ = {
+			isa = PBXGroup;
+			children = (
+				2B373FA31A4077D2008A7018 /* Chart.swift */,
+				2B373FA41A4077D2008A7018 /* ChartColors.swift */,
+				2B373FA51A4077D2008A7018 /* ChartSeries.swift */,
+			);
+			path = Chart;
+			sourceTree = "<group>";
+		};
 		2BA5FD7F1A389D40004615F2 = {
 			isa = PBXGroup;
 			children = (
@@ -81,14 +95,14 @@
 		2BA5FD8A1A389D40004615F2 /* MotionGraph */ = {
 			isa = PBXGroup;
 			children = (
-				2B533C181A3F071200D7B89D /* DotCALayer.swift */,
-				2B533C191A3F071200D7B89D /* LineChart.swift */,
+				2B373FA21A4077D2008A7018 /* Chart */,
 				2BA5FD8D1A389D40004615F2 /* AppDelegate.swift */,
 				2BA5FD8F1A389D40004615F2 /* ViewController.swift */,
 				2BA5FD911A389D40004615F2 /* Main.storyboard */,
 				2B373F601A3F1E42008A7018 /* Images.xcassets */,
 				2BA5FD961A389D40004615F2 /* LaunchScreen.xib */,
 				2BA5FD8B1A389D40004615F2 /* Supporting Files */,
+				2B373FAB1A40A1AB008A7018 /* SettingsViewController.swift */,
 			);
 			path = MotionGraph;
 			sourceTree = "<group>";
@@ -218,10 +232,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B533C1B1A3F071200D7B89D /* LineChart.swift in Sources */,
+				2B373FA81A4077D2008A7018 /* ChartSeries.swift in Sources */,
+				2B373FA61A4077D2008A7018 /* Chart.swift in Sources */,
+				2B373FA71A4077D2008A7018 /* ChartColors.swift in Sources */,
 				2BA5FD901A389D40004615F2 /* ViewController.swift in Sources */,
-				2B533C1A1A3F071200D7B89D /* DotCALayer.swift in Sources */,
 				2BA5FD8E1A389D40004615F2 /* AppDelegate.swift in Sources */,
+				2B373FAC1A40A1AB008A7018 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

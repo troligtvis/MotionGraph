@@ -5,83 +5,175 @@
 //  Created by Kj Drougge on 2014-12-10.
 //  Copyright (c) 2014 kj. All rights reserved.
 //
+
 import UIKit
 import CoreMotion
 
 class ViewController: UIViewController{
     
-    var linechart = LineChart()
-    var label = UILabel()
-    var views: Dictionary<String, AnyObject> = [:]
-    var list: [CGFloat] = [3, 4 , 9 , 11  ,13, 15]
+    @IBOutlet weak var chart: Chart!
+    @IBOutlet weak var graphLabel: UILabel!
+    var selectedChart = 0
     
-    var xList: Array<CGFloat> = []
-    var yList: Array<CGFloat> = []
-    var zList: Array<CGFloat> = []
+    var Xarray: [Float]! = []
+    var Yarray: [Float]! = []
+    var Zarray: [Float]! = []
     
     let manager = CMMotionManager()
     let motionQueue = NSOperationQueue()
     
+    var series: ChartSeries!
+    var series2: ChartSeries!
+    var series3: ChartSeries!
+    
+    var xValue: Double = 0.0;
+    var yValue: Double = 0.0;
+    var zValue: Double = 0.0;
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        if manager.accelerometerAvailable{
-            manager.accelerometerUpdateInterval = 1
-            manager.startAccelerometerUpdatesToQueue(motionQueue, withHandler: showValues)
+        
+        startGraph()
+    }
+    
+    func startGraph(){
+        chart.minY = -1
+        chart.maxY = 1
+        
+        for(var i = 0; i < 30; i++){
+            Xarray.append(Float(0));
+            Yarray.append(Float(0));
+            Zarray.append(Float(0));
+        }
+        
+        series = ChartSeries(Xarray)
+        series2 = ChartSeries(Yarray)
+        series3 = ChartSeries(Zarray)
+        
+        series.color = UIColor.blueColor()
+        series2.color = UIColor.redColor()
+        series3.color = UIColor.yellowColor()
+        
+        chart.addSeries(series)
+        chart.addSeries(series2)
+        chart.addSeries(series3)
+        
+        switch selectedChart{
+        case 0:
+            println("Accelerometer")
+            if manager.accelerometerAvailable{
+                graphLabel.text = "Accelerometer"
+                manager.accelerometerUpdateInterval = 1.0 / 30.0
+                manager.startAccelerometerUpdatesToQueue(motionQueue, withHandler:
+                    {(data: CMAccelerometerData!, error: NSError!) in
+                        
+                        self.xValue = (data.acceleration.x * 0.3) + (self.xValue * (1.0 - 0.3))
+                        self.yValue = (data.acceleration.y * 0.3) + (self.yValue * (1.0 - 0.3))
+                        self.zValue = (data.acceleration.z * 0.3) + (self.zValue * (1.0 - 0.3))
+                        
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.updateGraph(Float(self.xValue), y:Float(self.yValue),z: Float(self.zValue));
+                        })
+                })
+            }
             
-            label.text = "Accelorometer"
-            label.setTranslatesAutoresizingMaskIntoConstraints(false)
-            label.textAlignment = NSTextAlignment.Center
-            self.view.addSubview(label)
-            views["label"] = label
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[label]-|", options: nil, metrics: nil, views: views))
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-80-[label]", options: nil, metrics: nil, views: views))
+        case 1:
+            println("Gyroscope")
+            if manager.gyroAvailable{
+                graphLabel.text = "Gyroscope"
+                manager.gyroUpdateInterval = 1.0 / 30.0
+                manager.startGyroUpdatesToQueue(motionQueue, withHandler:
+                    {(data: CMGyroData!, error: NSError!) in
+                        
+                        self.xValue = (data.rotationRate.x * 0.3) + (self.xValue * (1.0 - 0.3))
+                        self.yValue = (data.rotationRate.y * 0.3) + (self.yValue * (1.0 - 0.3))
+                        self.zValue = (data.rotationRate.z * 0.3) + (self.zValue * (1.0 - 0.3))
+                        
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.updateGraph(Float(self.xValue), y:Float(self.yValue),z: Float(self.zValue));
+                        })
+                })
+            }
             
-            linechart.addLine(list)
-            //linechart.areaUnderLinesVisible = true
-            self.view.addSubview(linechart)
+        case 2:
+            println("Magnetometer")
+            if manager.magnetometerAvailable{
+                graphLabel.text = "Magnetometer"
+                manager.magnetometerUpdateInterval = 1.0 / 30.0
+                manager.startMagnetometerUpdatesToQueue(motionQueue, withHandler:
+                    {(data: CMMagnetometerData!, error: NSError!) in
+                        
+                        self.xValue = (data.magneticField.x * 0.3) + (self.xValue * (1.0 - 0.3))
+                        self.yValue = (data.magneticField.y * 0.3) + (self.yValue * (1.0 - 0.3))
+                        self.zValue = (data.magneticField.z * 0.3) + (self.zValue * (1.0 - 0.3))
+                        
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.updateGraph(Float(self.xValue), y:Float(self.yValue),z: Float(self.zValue));
+                        })
+                })
+            }
             
-            linechart.setTranslatesAutoresizingMaskIntoConstraints(false)
-            
-            views["chart"] = linechart
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
+        default:
+            break
         }
     }
     
-    func showValues(motion: CMAccelerometerData!, error: NSError!){
+    func stopGraph(){
+        self.manager.stopAccelerometerUpdates()
+        self.manager.stopGyroUpdates()
+        self.manager.stopMagnetometerUpdates()
         
-        var x = motion.acceleration.x
-        var y = motion.acceleration.y
-        var z = motion.acceleration.z
+        Xarray.removeAll()
+        Yarray.removeAll()
+        Zarray.removeAll()
+        chart.removeSeries()
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        println("viewDidDisappear")
+        stopGraph()
         
-        if xList.count == 10 {
-            xList.removeAtIndex(0)
-            yList.removeAtIndex(0)
-            zList.removeAtIndex(0)
-        }
-        
-        xList.append(CGFloat(x))
-        yList.append(CGFloat(y))
-        zList.append(CGFloat(z))
-        
-        dispatch_async(dispatch_get_main_queue(), {
-            
-            if self.xList.count > 2 {
-                self.linechart.clear()
-                
-                self.linechart.addLine(self.xList)
-                self.linechart.addLine(self.yList)
-                self.linechart.addLine(self.zList)
-                
-                self.view.addSubview(self.linechart)
-                self.linechart.setTranslatesAutoresizingMaskIntoConstraints(false)
-            }
-        })
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func updateGraph(x:Float, y:Float, z:Float){
+        
+        self.chart.removeSeries()
+        
+        if self.Xarray.count > 30{
+            Xarray.removeAtIndex(0)
+            Yarray.removeAtIndex(0)
+            Zarray.removeAtIndex(0)
+        }
+        
+        self.Xarray.append(Float(x))
+        self.Yarray.append(Float(y))
+        self.Zarray.append(Float(z))
+        
+        series = ChartSeries(Xarray)
+        series2 = ChartSeries(Yarray)
+        series3 = ChartSeries(Zarray)
+        
+        series.color = ChartColors.greenColor()
+        series2.color = ChartColors.redColor()
+        series3.color = ChartColors.blueColor()
+        
+        chart.addSeries(series)
+        chart.addSeries(series2)
+        chart.addSeries(series3)
+        
+        self.chart.setNeedsDisplay()
+    }
+    
+    @IBAction func unwindToThisViewController(segue: UIStoryboardSegue) {
+        if let settingsViewController = segue.sourceViewController as? SettingsViewController {
+            
+            selectedChart =  settingsViewController.graphSwitch.selectedSegmentIndex
+            startGraph()
+        }
     }
 }
